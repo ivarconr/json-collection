@@ -26,6 +26,7 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.*;
 import java.net.URI;
@@ -202,13 +203,13 @@ public class CollectionJsonParser {
             }
         }
         if (!object.isEmpty()) {
-            return new Property(name, prompt, object);
+            return Property.object(name, prompt, object);
         }
         if (!arr.isEmpty()) {
-            return new Property(name, prompt, arr);
+            return Property.array(name, prompt, arr);
         }
         Optional<Value> value = ValueFactory.createValue(node.get("value"));
-        return new Property(name, prompt, value);
+        return Property.value(name, prompt, value);
     }
 
     private URI createURI(JsonNode node) {
@@ -231,10 +232,8 @@ public class CollectionJsonParser {
     }
 
     private Link toLink(JsonNode linkNode) {
-        return new Link(
-                createURI(linkNode),
-                getStringValue(linkNode.get("rel")),
-                Optional.fromNullable(getStringValue(linkNode.get("prompt")))
-        );
+        Link link = new Link((ObjectNode) linkNode);
+        link.validate();
+        return link;
     }
 }

@@ -75,7 +75,7 @@ public class CollectionGeneratorTest {
     public void itemsCollection() throws Exception {
         List<Item> items = new ArrayList<Item>();
 
-        items.add(new Item(COLLECTION_URI.resolve("item/1"), ListOps.<Property>of(new Property("one", Optional.of("One"), ValueFactory.createValue(1))), Collections.<Link>emptyList()));
+        items.add(new Item(COLLECTION_URI.resolve("item/1"), ListOps.<Property>of(Property.value("one", Optional.of("One"), ValueFactory.createValue(1))), Collections.<Link>emptyList()));
         JsonNode jsonNode = generator.toNode(new DefaultCollection(COLLECTION_URI, Collections.<Link>emptyList(), items, Collections.<Query>emptyList(), null));
         assertNotNull(jsonNode);
         JsonNode collection = jsonNode.get("collection");
@@ -92,7 +92,7 @@ public class CollectionGeneratorTest {
                 Collections.<Link>emptyList(),
                 Collections.<Item>emptyList(),
                 Collections.<Query>emptyList(),
-                new Template(ListOps.<Property>of(new Property("one", Optional.of("One")))))
+                new Template(ListOps.<Property>of(Property.value("one", Optional.of("One"), Optional.<Value>absent()))))
         );
         assertNotNull(jsonNode);
         JsonNode collection = jsonNode.get("collection");
