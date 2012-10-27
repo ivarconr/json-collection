@@ -16,9 +16,12 @@
 
 package net.hamnaberg.json.parser;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import net.hamnaberg.json.*;
+import net.hamnaberg.json.Collection;
+import net.hamnaberg.json.Error;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
@@ -32,12 +35,10 @@ import java.util.*;
 /**
  * Parser for a vnd.collection+json document.
  */
-public class JsonCollectionParser {
-    private Charset UTF_8 = Charset.forName("UTF-8");
-
+public class CollectionJsonParser {
     private final JsonFactory factory = new JsonFactory(new ObjectMapper());
 
-    public JsonCollection parse(Reader reader) throws IOException {
+    public Collection parse(Reader reader) throws IOException {
         try {
             JsonParser jsonParser = factory.createJsonParser(reader);
             return parse(jsonParser.readValueAsTree());
@@ -58,8 +59,8 @@ public class JsonCollectionParser {
      * @return a jsonCollection
      * @throws IOException
      */
-    public JsonCollection parse(InputStream stream) throws IOException {
-        return parse(new BufferedReader(new InputStreamReader(stream, UTF_8)));
+    public Collection parse(InputStream stream) throws IOException {
+        return parse(new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8)));
     }
 
     public Template parseTemplate(Reader reader) throws IOException {
@@ -83,22 +84,22 @@ public class JsonCollectionParser {
      * @throws IOException
      */
     public Template parseTemplate(InputStream stream) throws IOException {
-        return parseTemplate(new BufferedReader(new InputStreamReader(stream, UTF_8)));
+        return parseTemplate(new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8)));
     }
 
-    private JsonCollection parse(JsonNode node) throws IOException {
+    private Collection parse(JsonNode node) throws IOException {
         JsonNode collectionNode = node.get("collection");
         return parseCollection(collectionNode);
     }
 
-    private JsonCollection parseCollection(JsonNode collectionNode) {
+    private Collection parseCollection(JsonNode collectionNode) {
         URI href = createURI(collectionNode);
         Version version = getVersion(collectionNode);
         Preconditions.checkArgument(version == Version.ONE, "Version was %s, may only be %s", version.getIdentifier(), Version.ONE.getIdentifier());
-        ErrorMessage error = parseError(collectionNode);
+        Error error = parseError(collectionNode);
 
         if (error != null) {
-            return new ErrorJsonCollection(href, error);
+            return new ErrorCollection(href, error);
         }
 
         List<Link> links = parseLinks(collectionNode);
@@ -107,19 +108,19 @@ public class JsonCollectionParser {
         List<Query> queries = parseQueries(collectionNode);
         Template template = parseTemplate(collectionNode);
 
-        return new DefaultJsonCollection(href, links, items, queries, template);
+        return new DefaultCollection(href, links, items, queries, template);
     }
 
-    private ErrorMessage parseError(JsonNode collectionNode) {
+    private Error parseError(JsonNode collectionNode) {
         JsonNode errorNode = collectionNode.get("error");
         if (errorNode != null) {
             String title = getStringValue(errorNode.get("title"));
             String code = getStringValue(errorNode.get("code"));
             String message = getStringValue(errorNode.get("message"));
             if (isEmpty(title) && isEmpty(code) && isEmpty(message)) {
-                return ErrorMessage.EMPTY;
+                return Error.EMPTY;
             }
-            return new ErrorMessage(title, code, message);
+            return new Error(title, code, message);
         }
         return null;
     }

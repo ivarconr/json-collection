@@ -16,17 +16,17 @@
 
 package net.hamnaberg.json;
 
-import net.hamnaberg.json.generator.JsonCollectionGenerator;
+import net.hamnaberg.json.generator.CollectionGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.*;
 import java.net.URI;
 import java.nio.charset.Charset;
 
-public abstract class AbstractJsonCollection implements JsonCollection {
+public abstract class AbstractCollection implements Collection {
     private final URI href;
 
-    public AbstractJsonCollection(URI href) {
+    public AbstractCollection(URI href) {
         this.href = href;
     }
 
@@ -46,7 +46,7 @@ public abstract class AbstractJsonCollection implements JsonCollection {
     @Override
     public void writeTo(Writer writer) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(writer, new JsonCollectionGenerator().toNode(this));
+        mapper.writeValue(writer, new CollectionGenerator().toNode(this));
     }
 
     @Override

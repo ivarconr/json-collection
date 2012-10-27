@@ -19,10 +19,10 @@ package net.hamnaberg.json;
 import java.net.URI;
 import java.util.List;
 
-public class ErrorJsonCollection extends AbstractJsonCollection {
-    private final ErrorMessage error;
+public class ErrorCollection extends AbstractCollection {
+    private final Error error;
 
-    public ErrorJsonCollection(URI href, ErrorMessage error) {
+    public ErrorCollection(URI href, Error error) {
         super(href);
         this.error = error;
     }
@@ -58,7 +58,7 @@ public class ErrorJsonCollection extends AbstractJsonCollection {
     }
 
     @Override
-    public ErrorMessage getError() {
+    public Error getError() {
         return error;
     }
 }

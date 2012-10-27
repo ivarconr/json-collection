@@ -21,7 +21,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.List;
 
-public interface JsonCollection extends WithHref {
+public interface Collection extends WithHref {
     Version getVersion();
 
     List<Link> getLinks();
@@ -30,7 +30,7 @@ public interface JsonCollection extends WithHref {
 
     boolean hasError();
 
-    ErrorMessage getError();
+    Error getError();
 
     Template getTemplate();
 

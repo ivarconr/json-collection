@@ -18,6 +18,7 @@ package net.hamnaberg.json.generator;
 
 import com.google.common.base.Optional;
 import net.hamnaberg.json.*;
+import net.hamnaberg.json.Error;
 import net.hamnaberg.json.util.ListOps;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
@@ -33,20 +34,20 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class JsonCollectionGeneratorTest {
+public class CollectionGeneratorTest {
     private static final URI COLLECTION_URI = URI.create("http://example.com/collection");
 
-    private JsonCollectionGenerator generator;
+    private CollectionGenerator generator;
     private final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
 
     @Before
     public void setUp() throws Exception {
-        generator = new JsonCollectionGenerator();
+        generator = new CollectionGenerator();
     }
 
     @Test
     public void minimalCollection() throws Exception {
-        JsonNode jsonNode = generator.toNode(new DefaultJsonCollection(COLLECTION_URI));
+        JsonNode jsonNode = generator.toNode(new DefaultCollection(COLLECTION_URI));
         assertNotNull(jsonNode);
         JsonNode collection = jsonNode.get("collection");
         assertEquals("1.0", collection.get("version").asText());
@@ -55,7 +56,7 @@ public class JsonCollectionGeneratorTest {
 
     @Test
     public void errorCollection() throws Exception {
-        JsonNode jsonNode = generator.toNode(new ErrorJsonCollection(COLLECTION_URI, new ErrorMessage("Hello", "Warning", "Hello")));
+        JsonNode jsonNode = generator.toNode(new ErrorCollection(COLLECTION_URI, new Error("Hello", "Warning", "Hello")));
         assertNotNull(jsonNode);
         JsonNode collection = jsonNode.get("collection");
         assertNotNull(collection);
@@ -75,7 +76,7 @@ public class JsonCollectionGeneratorTest {
         List<Item> items = new ArrayList<Item>();
 
         items.add(new Item(COLLECTION_URI.resolve("item/1"), ListOps.<Property>of(new Property("one", Optional.of("One"), ValueFactory.createValue(1))), Collections.<Link>emptyList()));
-        JsonNode jsonNode = generator.toNode(new DefaultJsonCollection(COLLECTION_URI, Collections.<Link>emptyList(), items, Collections.<Query>emptyList(), null));
+        JsonNode jsonNode = generator.toNode(new DefaultCollection(COLLECTION_URI, Collections.<Link>emptyList(), items, Collections.<Query>emptyList(), null));
         assertNotNull(jsonNode);
         JsonNode collection = jsonNode.get("collection");
         assertNotNull(collection);
@@ -86,7 +87,7 @@ public class JsonCollectionGeneratorTest {
 
     @Test
     public void templateCollection() throws Exception {
-        JsonNode jsonNode = generator.toNode(new DefaultJsonCollection(
+        JsonNode jsonNode = generator.toNode(new DefaultCollection(
                 COLLECTION_URI,
                 Collections.<Link>emptyList(),
                 Collections.<Item>emptyList(),

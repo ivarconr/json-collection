@@ -18,19 +18,19 @@ package net.hamnaberg.json.generator;
 
 import com.google.common.base.Function;
 import net.hamnaberg.json.*;
+import net.hamnaberg.json.Error;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
-public class JsonCollectionGenerator extends AbstractGenerator<JsonCollection> {
+public class CollectionGenerator extends AbstractGenerator<Collection> {
     private final GeneratorFactory factory;
 
-    public JsonCollectionGenerator() {
+    public CollectionGenerator() {
         factory = new CollectionJsonGenerator();
     }
 
     @Override
-    public JsonNode toNode(JsonCollection object) {
+    public JsonNode toNode(Collection object) {
         ObjectNode node = nodeFactory.objectNode();
         node.put("href", object.getHref().toString());
         node.put("version", object.getVersion().getIdentifier());
@@ -61,7 +61,7 @@ public class JsonCollectionGenerator extends AbstractGenerator<JsonCollection> {
             register(Link.class, new LinkGenerator());
             register(Property.class, new PropertyGenerator());
             register(Item.class, new ItemGenerator());
-            register(ErrorMessage.class, new ErrorMessageGenerator());
+            register(Error.class, new ErrorMessageGenerator());
             register(Template.class, new TemplateGenerator());
         }
     }

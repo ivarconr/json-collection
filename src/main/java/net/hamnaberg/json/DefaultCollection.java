@@ -27,21 +27,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DefaultJsonCollection extends AbstractJsonCollection {
+public class DefaultCollection extends AbstractCollection {
     private final List<Link> links = new ArrayList<Link>();
     private final List<Item> items = new ArrayList<Item>();
     private final List<Query> queries = new ArrayList<Query>();
     private final Optional<Template> template;
 
-    public DefaultJsonCollection(URI href) {
+    public DefaultCollection(URI href) {
         this(href, Collections.<Link>emptyList(), Collections.<Item>emptyList(), Collections.<Query>emptyList(), null);
     }
 
-    public DefaultJsonCollection(URI href, List<Item> items) {
+    public DefaultCollection(URI href, List<Item> items) {
         this(href, Collections.<Link>emptyList(), items, Collections.<Query>emptyList(), null);
     }
 
-    public DefaultJsonCollection(URI href, List<Link> links, List<Item> items, List<Query> queries, Template template) {
+    public DefaultCollection(URI href, List<Link> links, List<Item> items, List<Query> queries, Template template) {
         super(href);
         if (links != null) {
             this.links.addAll(links);
@@ -123,7 +123,7 @@ public class DefaultJsonCollection extends AbstractJsonCollection {
     }
 
     @Override
-    public ErrorMessage getError() {
+    public Error getError() {
         throw new UnsupportedOperationException("Incorrect Collection type.");
     }
 
@@ -183,8 +183,8 @@ public class DefaultJsonCollection extends AbstractJsonCollection {
             }
         }
 
-        public JsonCollection build() {
-            return new DefaultJsonCollection(href, linkBuilder, itemBuilder, queryBuilder, template);
+        public Collection build() {
+            return new DefaultCollection(href, linkBuilder, itemBuilder, queryBuilder, template);
         }
     }
 }
