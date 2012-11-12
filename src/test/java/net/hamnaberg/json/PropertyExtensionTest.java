@@ -25,7 +25,7 @@ public class PropertyExtensionTest {
   protected final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
 
   @Test
-  public void play_around() throws URISyntaxException, IOException {
+  public void should_add_required_extension() throws URISyntaxException, IOException {
 
     Property prop = Property.value("prop", Optional.of("test Prop"), Optional.<Value>absent())
             .apply(true, requiredExtenstion());
@@ -46,7 +46,7 @@ public class PropertyExtensionTest {
     return new Extension<Boolean>() {
       @Override
       public Boolean extract(ObjectNode node) {
-        return node.getBooleanValue();
+        return node.get("required").getBooleanValue();
       }
       
       @Override
